@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (1:1.4+202410161351+e7c3feb100)"
+   sodipodi:docname="Youtube Playlist Organiser Unexported.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.61914282"
+     inkscape:cx="290.72452"
+     inkscape:cy="317.37427"
+     inkscape:window-width="1920"
+     inkscape:window-height="945"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="297"
+       height="210"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:5.29167;stroke-linecap:round;stroke-linejoin:round"
+       id="rect1"
+       width="297"
+       height="210"
+       x="0"
+       y="0" />
+    <path
+       id="path6"
+       style="fill:#ff3333;fill-opacity:1;stroke:none;stroke-width:6.03308;stroke-linecap:round;stroke-linejoin:round"
+       d="m 323.92231,138.03021 c -1.72409,4.54533 -79.25479,3.13517 -142.3036,-58.545319 C 118.5699,17.804402 -12.392806,28.631655 -12.392806,28.631655 L -55.924618,39.75997 c 0,0 149.311639,-12.344239 221.194098,57.978181 71.88246,70.322429 160.27583,71.930159 162.24148,66.747999 z"
+       sodipodi:nodetypes="csccscc" />
+    <path
+       style="fill:none;stroke:#b3b3b3;stroke-width:6.03308;stroke-linecap:round;stroke-linejoin:round"
+       d="m -55.924618,39.75997 c 0,0 149.311639,-12.344239 221.194098,57.978181 71.88246,70.322429 160.27583,71.930159 162.24148,66.747999"
+       id="path1-5"
+       sodipodi:nodetypes="czc" />
+    <path
+       style="fill:none;stroke:#e6e6e6;stroke-width:5.29167;stroke-linecap:round;stroke-linejoin:round"
+       d="m -12.392806,28.631655 c 0,0 130.962706,-10.827253 194.011516,50.853236 63.04881,61.680489 140.57951,63.090649 142.3036,58.545319"
+       id="path1"
+       sodipodi:nodetypes="czc" />
+  </g>
+</svg>

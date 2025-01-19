@@ -1,0 +1,41 @@
+:root {
+    --size-multiplier: 4;
+}
+
+body {
+    background-image: url(/img/Background.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 100vw;
+    height: 100vh;
+}
+
+#playlists {
+    width: 80vw;
+    height: fit-content;
+    background-color: rgba(0, 0, 0, 0.863);
+    position: absolute;
+    left: 50%;
+    top: 5vh;
+    transform: translatex(-50%);
+    border-radius: 5vmin;
+}
+
+#playlists input {
+    padding: 0;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    font-size: 15vmin;
+    font-family: monospace;
+    color: white;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+}
+
+#playlists input:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
