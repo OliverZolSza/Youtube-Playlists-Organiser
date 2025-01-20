@@ -9,7 +9,7 @@
 </head>
 <body>
     <a id="home-icon" href="/"><img src="/img/home.svg" alt="HOME"></a>
-    <div id="videos"><div id="fileContents"></div></div>
+    <div id="videos"></div>
     <script src="./functionality.js"></script>
 </body>
 </html>
