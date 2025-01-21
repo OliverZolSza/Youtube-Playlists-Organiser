@@ -84,6 +84,9 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    border-radius: 1.5vmin;
 }
 
 #videos .video .right .delete img,
@@ -97,6 +100,22 @@ body {
     right: 12vmin;
 }
 
+#videos .video .right .delete:hover {
+    background-color: red;
+}
+
+#videos .video .right .delete:active {
+    background-color: darkred;
+}
+
 #videos .video .right .move{
     right: 0;
+}
+
+#videos .video .right .move:hover {
+    background-color: darkgray;
+}
+
+#videos .video .right .move:active {
+    background-color: gray;
 }
