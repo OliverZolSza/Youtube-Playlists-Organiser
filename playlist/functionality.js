@@ -107,7 +107,7 @@ function appendVideos (embedURLs = [], watchURLs = []) {
         const deleteElement = document.createElement("button");
         deleteElement.className = "delete";
         deleteElement.onclick = function() {
-            deleteItem();
+            deleteItem(i);
         };
         rightElement.appendChild(deleteElement);
         const deleteIMG = document.createElement("img");
@@ -119,7 +119,7 @@ function appendVideos (embedURLs = [], watchURLs = []) {
         const moveElement = document.createElement("button");
         moveElement.className = "move";
         moveElement.onclick = function() {
-            moveItem();
+            moveItem(i);
         };
         rightElement.appendChild(moveElement);
         const moveIMG = document.createElement("img");
@@ -151,13 +151,13 @@ function loadPlaylist (file){
 }
 
 
-function deleteItem () {
-    //
+function deleteItem (n) {
+    console.log("Hello, World!" + n.toString());
 }
 
 
-function moveItem () {
-    //
+function moveItem (n) {
+    console.log("Hello, World!" + n.toString());
 }
 
 
