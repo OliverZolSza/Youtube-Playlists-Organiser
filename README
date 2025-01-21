@@ -1,1 +1,8 @@
 To run the program place all of the files into a web server's root and access via the URL
+
+Place playlist files in ./playlists in the format: name_of_playlist.txt, contents are URLs separated with newlines e.g.:
+
+URL1
+URL2
+URL3
+etc.
