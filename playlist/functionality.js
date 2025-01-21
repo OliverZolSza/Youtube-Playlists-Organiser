@@ -103,23 +103,29 @@ function appendVideos (embedURLs = [], watchURLs = []) {
         playlistIndexElement.innerHTML = (i + 1).toString();
         rightElement.appendChild(playlistIndexElement);
 
-        //  div.delete
-        const deleteDIV = document.createElement("div");
-        deleteDIV.className = "delete";
-        rightElement.appendChild(deleteDIV);
+        //  button.delete
+        const deleteElement = document.createElement("button");
+        deleteElement.className = "delete";
+        deleteElement.onclick = function() {
+            deleteItem();
+        };
+        rightElement.appendChild(deleteElement);
         const deleteIMG = document.createElement("img");
         deleteIMG.src = "/img/rubbish can.svg";
         deleteIMG.alt = "DEL"
-        deleteDIV.appendChild(deleteIMG);
+        deleteElement.appendChild(deleteIMG);
 
-        //  div.move
-        const moveDIV = document.createElement("div");
-        moveDIV.className = "move";
-        rightElement.appendChild(moveDIV);
+        //  button.move
+        const moveElement = document.createElement("button");
+        moveElement.className = "move";
+        moveElement.onclick = function() {
+            moveItem();
+        };
+        rightElement.appendChild(moveElement);
         const moveIMG = document.createElement("img");
         moveIMG.src = "/img/move.svg";
         moveIMG.alt = "≡"
-        moveDIV.appendChild(moveIMG);
+        moveElement.appendChild(moveIMG);
     }
 }
 
@@ -142,6 +148,16 @@ function loadPlaylist (file){
     const watchURLs = convertToWatchUrls(inputURLs)
     
     appendVideos(embedURLs, watchURLs);
+}
+
+
+function deleteItem () {
+    //
+}
+
+
+function moveItem () {
+    //
 }
 
 
