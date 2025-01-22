@@ -1,9 +1,13 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/x-www-form-urlencoded');
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 $directoryPath = 'playlists';
-$lineToRemove = $_POST['index'];
-$fileName = $_POST['fileName'];
+$lineToRemove = urldecode($_POST['index']);
+$fileName = urldecode($_POST['fileName']);
+
 $response = [];
 
 if (is_dir($directoryPath)) {
@@ -14,13 +18,14 @@ if (is_dir($directoryPath)) {
         if (isset($lines[$lineToRemove])) {
             unset($lines[$lineToRemove]);
             $lines = array_values($lines);
-            file_put_contents($filePath, implode(PHP_EOL, $lines) . PHP_EOL);
-            $response = 'SUCCESS';
+            $result = file_put_contents($filePath, implode(PHP_EOL, $lines) . PHP_EOL);
+            //MAKE SURE PLAYLIST FILES HAVE CORRECT PERMISSIONS
+            $response = 'SUCCESS? ' . var_export($result, true);
         } else {
-            $response = 'ERROR';
+            $response = 'ERROR: ' . isset($lines[$lineToRemove]);
         }
     } else {
-        $response = 'ERROR';
+        $response = 'ERROR: ' . $filePath;
     }
 
     echo $response;

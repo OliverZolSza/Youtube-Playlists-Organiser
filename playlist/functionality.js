@@ -153,34 +153,49 @@ function loadPlaylist (file){
 
 function deleteItem (n, fileName) {
     console.log("Hello, World!" + n.toString());
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/delete.php', true);
-        
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                
-                if (response.error) {
-                    reject(response.error);
-                } else if (xhr.responseText == "ERROR") {
-                    reject("ERROR");
-                } else {
-                    resolve(response.files);
-                }
-            } else {
-                reject('Error fetching file contents.');
-            }
-        };
-        
-        xhr.onerror = function() {
-            reject('Request failed.');
-        };
+    (function () {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
 
-        let data = "index=" + encodeURIComponent(n) + "&fileName=" + encodeURIComponent(fileName);
-        
-        xhr.send(data);
-    });
+            xhr.open('POST', '/delete.php', true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = xhr.responseText;
+                    
+                    if (response == "ERROR") {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                } else {
+                    reject('Error fetching file contents.');
+                }
+            };
+            
+            xhr.onerror = function() {
+                reject('Request failed.');
+            };
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+            let data = "index=" + encodeURIComponent(n) + "&fileName=" + encodeURIComponent(fileName);
+
+            console.log(data);
+            
+            xhr.send(data);
+        });
+    })()
+        .then(response => {
+            console.log(response);
+        })
+        .catch(error => {
+            console.log(error);
+            document.body.innerHTML = '';
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = error;
+            document.body.appendChild(errorMessage);
+        });
 }
 
 
