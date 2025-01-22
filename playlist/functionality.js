@@ -71,7 +71,7 @@ function convertToWatchUrls (inputURLs) {
     return watchURLs;
 }
 
-function appendVideos (embedURLs = [], watchURLs = []) {
+function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     const videosDIV = document.getElementById("videos");
 
     for (let i = 0; i < embedURLs.length; i++) {
@@ -107,7 +107,7 @@ function appendVideos (embedURLs = [], watchURLs = []) {
         const deleteElement = document.createElement("button");
         deleteElement.className = "delete";
         deleteElement.onclick = function() {
-            deleteItem(i);
+            deleteItem(i, fileName);
         };
         rightElement.appendChild(deleteElement);
         const deleteIMG = document.createElement("img");
@@ -147,12 +147,40 @@ function loadPlaylist (file){
     const embedURLs = convertToEmbedUrls(inputURLs);
     const watchURLs = convertToWatchUrls(inputURLs)
     
-    appendVideos(embedURLs, watchURLs);
+    appendVideos(embedURLs, watchURLs, fileName);
 }
 
 
-function deleteItem (n) {
+function deleteItem (n, fileName) {
     console.log("Hello, World!" + n.toString());
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/delete.php', true);
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                
+                if (response.error) {
+                    reject(response.error);
+                } else if (xhr.responseText == "ERROR") {
+                    reject("ERROR");
+                } else {
+                    resolve(response.files);
+                }
+            } else {
+                reject('Error fetching file contents.');
+            }
+        };
+        
+        xhr.onerror = function() {
+            reject('Request failed.');
+        };
+
+        let data = "index=" + encodeURIComponent(n) + "&fileName=" + encodeURIComponent(fileName);
+        
+        xhr.send(data);
+    });
 }
 
 
