@@ -188,6 +188,16 @@ function deleteItem (n, fileName) {
     })()
         .then(response => {
             console.log(response);
+            const currentVideoElement = document.getElementsByClassName("video")[n];
+            const currentDeleteButton = currentVideoElement.getElementsByClassName("delete")[0];
+            if (currentDeleteButton) {
+                currentDeleteButton.remove();
+            }
+            const currentMoveButton = currentVideoElement.getElementsByClassName("move")[0];
+            if (currentMoveButton) {
+                currentMoveButton.remove();
+            }
+            currentVideoElement.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
         })
         .catch(error => {
             console.log(error);
