@@ -73,11 +73,16 @@ function convertToWatchUrls (inputURLs) {
 
 function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     const videosDIV = document.getElementById("videos");
+    videosDIVoriginalHeight = window.getComputedStyle(videosDIV).height;
+    console.log(videosDIVoriginalHeight);
+    videosDIV.style.height = `calc(${videosDIVoriginalHeight} + calc( calc(var(--size-multiplier) * 9vmin) * ${embedURLs.length} - 5vmin + ${videosDIVoriginalHeight}))`;
 
     for (let i = 0; i < embedURLs.length; i++) {
         const currentURL = embedURLs[i];
         const videoDIV = document.createElement("div")
         videoDIV.className = "video";
+        videoDIV.style.position = "absolute";
+        videoDIV.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight})`;
         videosDIV.appendChild(videoDIV);
         const currentVideoDIV = document.getElementsByClassName("video")[i];
 
@@ -116,11 +121,8 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
         deleteElement.appendChild(deleteIMG);
 
         //  button.move
-        const moveElement = document.createElement("button");
+        const moveElement = document.createElement("div");
         moveElement.className = "move";
-        moveElement.onclick = function() {
-            moveItem(i);
-        };
         rightElement.appendChild(moveElement);
         const moveIMG = document.createElement("img");
         moveIMG.src = "/img/move.svg";
@@ -152,7 +154,6 @@ function loadPlaylist (file){
 
 
 function deleteItem (n, fileName) {
-    console.log("Hello, World!" + n.toString());
     (function () {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -209,11 +210,85 @@ function deleteItem (n, fileName) {
 }
 
 
-function moveItem (n) {
-    console.log("Hello, World!" + n.toString());
+function moveItem (n1, n2) {
+    //move item from n1 to n2
 }
 
+function setUpDragging() {
+    const videos = document.querySelectorAll('.video');
+    let currentDrag = null;
+    let offsetX, offsetY;
+    let originalX, originalY;
 
+    videos.forEach(video => {
+        const moveHandle = video.querySelector('.move');
+
+        moveHandle.addEventListener('mousedown', (e) => {
+            e.preventDefault(); // Prevent default behavior
+            currentDrag = video;
+            offsetX = e.clientX - video.getBoundingClientRect().left;
+            offsetY = e.clientY - video.getBoundingClientRect().top;
+
+            originalX = video.getBoundingClientRect().left;
+            originalY = video.getBoundingClientRect().top;
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+    });
+
+    function onMouseMove(e) {
+        if (currentDrag) {
+            const rect = currentDrag.getBoundingClientRect();
+
+            const newX = e.clientX - offsetX + window.scrollX;
+            const newY = e.clientY - offsetY + window.scrollY;
+
+            currentDrag.style.left = `${newX}px`;
+            currentDrag.style.top = `${newY}px`;
+        }
+    }
+    
+    function onMouseUp() {
+        if (currentDrag) {
+            const nearestVideo = findNearestVideo(currentDrag);
+            if (nearestVideo) {
+                const rect = nearestVideo.getBoundingClientRect();
+                currentDrag.style.left = `${rect.left + window.scrollX}px`;
+                currentDrag.style.top = `${rect.top + window.scrollY}px`;
+            } else {
+                currentDrag.style.left = originalX;
+                currentDrag.style.top = originalY;
+            }
+            currentDrag = null;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+    }
+    
+    function findNearestVideo(draggedVideo) {
+        let nearest = null;
+        let minDistance = Infinity;
+
+        videos.forEach(video => {
+            if (video !== draggedVideo) {
+                const rect1 = draggedVideo.getBoundingClientRect();
+                const rect2 = video.getBoundingClientRect();
+                const distance = Math.sqrt(
+                    Math.pow(rect1.left - rect2.left, 2) +
+                    Math.pow(rect1.top - rect2.top, 2)
+                );
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearest = video;
+                }
+            }
+        });
+
+        return nearest;
+    }
+}
 
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -222,6 +297,7 @@ window.onload = () => {
     fetchFileContents()
         .then(files => {
             loadPlaylist(files[playlistID]);
+            setUpDragging();
         })
         .catch(error => {
             document.body.innerHTML = '';

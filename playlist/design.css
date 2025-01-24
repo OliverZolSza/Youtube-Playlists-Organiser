@@ -50,6 +50,7 @@ body {
     width: 100%;
     height: calc(var(--size-multiplier) * 9vmin);
     display: flex;
+    position: relative;
 }
 
 #videos .video .right {
@@ -110,6 +111,7 @@ body {
 
 #videos .video .right .move{
     right: 0;
+    cursor: grab;
 }
 
 #videos .video .right .move:hover {
