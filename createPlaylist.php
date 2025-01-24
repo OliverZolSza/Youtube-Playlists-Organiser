@@ -1,12 +1,11 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/x-www-form-urlencoded');
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $directoryPath = 'playlists';
-$data = json_decode(file_get_contents('php://input'), true);
-$fileName = $data['fileName'];
+$fileName = urldecode($_POST['fileName']);
 
 $response = [];
 
@@ -14,12 +13,13 @@ if (is_dir($directoryPath)) {
     $filePath = $directoryPath . '/' . $fileName;
 
     if (touch($filePath)) {
-        echo json_encode(['success' => 'success']);
+        $response = 'SUCCESS';
     } else {
-        echo json_encode(['error' => 'error']);
+        $response = 'ERROR';
     }
 
+    echo $response;
 } else {
-    echo json_encode(['error' => 'Directory not found.']);
+    echo 'Directory not found.';
 }
 ?>

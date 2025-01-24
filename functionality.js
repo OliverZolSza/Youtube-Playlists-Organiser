@@ -72,45 +72,47 @@ function setValue (value) {
 }
 
 function createPlaylist(fileName) {
-    (() => {
+    (function () {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
+
             xhr.open('POST', '/createPlaylist.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-    
-            const data = JSON.stringify({ fileName: fileName });
             
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
+                    const response = xhr.responseText;
                     
-                    if (response.error) {
-                        reject(response.error);
+                    if (response == "ERROR") {
+                        reject(response);
                     } else {
-                        resolve(response.success);
+                        resolve(response);
                     }
                 } else {
-                    reject('Error');
+                    reject('Error fetching file contents.');
                 }
             };
             
             xhr.onerror = function() {
                 reject('Request failed.');
             };
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+            let data = "fileName=" + encodeURIComponent(fileName);
             
             xhr.send(data);
         });
-    })().then(success => {
-        document.body.innerHTML = '';
-        const errorMessage = document.createElement('div');
-        errorMessage.innerText = success;
-        document.body.appendChild(errorMessage);
-    }).catch(error => {
-        document.body.innerHTML = '';
-        const errorMessage = document.createElement('div');
-        errorMessage.innerText = error;
-        document.body.appendChild(errorMessage);
-    });
+    })()
+        .then(response => {
+            console.log(response);
+        })
+        .catch(error => {
+            console.log(error);
+            document.body.innerHTML = '';
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = error;
+            document.body.appendChild(errorMessage);
+        });
 }
 
 
