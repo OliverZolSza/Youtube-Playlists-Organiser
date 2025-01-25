@@ -74,7 +74,7 @@ function convertToWatchUrls (inputURLs) {
 function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     const videosDIV = document.getElementById("videos");
 
-    const newButton = document.getElementById("new-item");
+    const newButton = document.getElementById("new-icon");
     newButton.onclick = function(){
         newItem(fileName);
     };
