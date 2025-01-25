@@ -12,7 +12,7 @@ $response = [];
 if (is_dir($directoryPath)) {
     $filePath = $directoryPath . '/' . $fileName;
 
-    if (file_exists($file)) {
+    if (file_exists($filePath)) {
         if (unlink($filePath)) {
             $response = 'SUCCESS';
         } else {

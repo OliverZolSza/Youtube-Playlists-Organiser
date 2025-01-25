@@ -53,7 +53,7 @@ function convertToEmbedUrls (inputURLs) {
     return embedURLs;
 }
 
-function loadPlaylist (file, playlistID){
+function loadPlaylist (file, playlistID, files){
     const fileName = `${file.file}`;
 
     //  h1 -> Playlist Titles
@@ -74,7 +74,7 @@ function loadPlaylist (file, playlistID){
     const playlistDeleteElement = document.createElement("div");
     playlistDeleteElement.className = "delete";
     playlistDeleteElement.onclick = function() {
-        deletePlaylistOnClick();
+        deletePlaylist(files[playlistID], playlistTitleElement, playlistDeleteElement);
     };
 
     const playlistDeleteImage = document.createElement("img");
@@ -157,7 +157,7 @@ async function newPlaylist(){
     }
 }
 
-async function deletePlaylist (fileName) {
+async function deletePlaylist (fileName, titleElement, deleteButton) {
     await (function () {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -183,14 +183,20 @@ async function deletePlaylist (fileName) {
             };
 
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    
-            let data = "fileName=" + encodeURIComponent(fileName);
+            
+            let data = "fileName=" + encodeURIComponent(fileName.file);
             
             xhr.send(data);
         });
     })()
         .then(response => {
             console.log(response);
+            titleElement.style.color = "red";
+            titleElement.type = "button";
+            titleElement.onclick = function(){
+                alert("THIS PLAYLIST HAS BEEN DELETED");
+            };
+            deleteButton.remove();
         })
         .catch(error => {
             console.log(error);
@@ -201,14 +207,6 @@ async function deletePlaylist (fileName) {
         });
 }
 
-async function deletePlaylistOnClick(fileName){
-    if (fileName !== null && fileName !== "") {
-        // OK
-        await deletePlaylist(`${fileName}.txt`)
-        location.reload();
-    }
-}
-
 
 
 window.onload = () => {
@@ -216,7 +214,7 @@ window.onload = () => {
         .then(files => {
             for (let id = 0; id < files.length; id++) {
                 const file = files[id];
-                loadPlaylist(file, id);
+                loadPlaylist(file, id, files);
             }
         })
         .catch(error => {
