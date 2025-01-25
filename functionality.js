@@ -59,14 +59,32 @@ function loadPlaylist (file, playlistID){
     //  h1 -> Playlist Titles
     const playlistsDIV = document.getElementById("playlists");
 
-    const playlistTitleElement = document.createElement("input");
+
+    const playlistTitleAndDeleteElementsDIV = document.createElement("div");
+
+    const playlistTitleElement = document.createElement("button");
     playlistTitleElement.type = "submit";
     playlistTitleElement.value = fileName.replace(/\.txt$/, '');
+    playlistTitleElement.innerHTML = fileName.replace(/\.txt$/, '');
     playlistTitleElement.onclick = function(){
         setValue(playlistID);
     };
-    const playlistDeleteElement = document.createElement("");
-    playlistsDIV.appendChild(playlistTitleElement);
+    playlistTitleAndDeleteElementsDIV.appendChild(playlistTitleElement);
+
+    const playlistDeleteElement = document.createElement("div");
+    playlistDeleteElement.className = "delete";
+    playlistDeleteElement.onclick = function() {
+        deletePlaylistOnClick();
+    };
+
+    const playlistDeleteImage = document.createElement("img");
+    playlistDeleteImage.src = "/img/rubbish can.svg";
+    playlistDeleteImage.alt = "DEL";
+    playlistDeleteElement.appendChild(playlistDeleteImage);
+
+    playlistTitleAndDeleteElementsDIV.appendChild(playlistDeleteElement);
+
+    playlistsDIV.appendChild(playlistTitleAndDeleteElementsDIV);
 }
 
 function setValue (value) {
