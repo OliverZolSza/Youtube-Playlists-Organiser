@@ -57,22 +57,24 @@ function loadPlaylist (file, playlistID){
     const fileName = `${file.file}`;
 
     //  h1 -> Playlist Titles
-    const videosDIV = document.getElementById("playlists");
+    const playlistsDIV = document.getElementById("playlists");
+
     const playlistTitleElement = document.createElement("input");
     playlistTitleElement.type = "submit";
     playlistTitleElement.value = fileName.replace(/\.txt$/, '');
     playlistTitleElement.onclick = function(){
         setValue(playlistID);
     };
-    videosDIV.appendChild(playlistTitleElement);
+    const playlistDeleteElement = document.createElement("");
+    playlistsDIV.appendChild(playlistTitleElement);
 }
 
 function setValue (value) {
     document.getElementById("submitValue").value = value;
 }
 
-function createPlaylist(fileName) {
-    (function () {
+async function createPlaylist(fileName) {
+    await (function () {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
 
@@ -115,7 +117,7 @@ function createPlaylist(fileName) {
         });
 }
 
-function newPlaylist(){
+async function newPlaylist(){
     let input;
 
     do {
@@ -130,10 +132,62 @@ function newPlaylist(){
         
     if (input !== null) {
         // OK
-        alert("You entered: " + input);
-        createPlaylist(`${input}.txt`)
+        await createPlaylist(`${input}.txt`)
+        location.reload();
     } else {
         return;
+    }
+}
+
+async function deletePlaylist (fileName) {
+    await (function () {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', '/deletePlaylist.php', true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = xhr.responseText;
+                    
+                    if (response == "ERROR") {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                } else {
+                    reject('Error fetching file contents.');
+                }
+            };
+            
+            xhr.onerror = function() {
+                reject('Request failed.');
+            };
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+            let data = "fileName=" + encodeURIComponent(fileName);
+            
+            xhr.send(data);
+        });
+    })()
+        .then(response => {
+            console.log(response);
+        })
+        .catch(error => {
+            console.log(error);
+            document.body.innerHTML = '';
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = error;
+            document.body.appendChild(errorMessage);
+        });
+}
+
+async function deletePlaylistOnClick(fileName){
+    if (fileName !== null && fileName !== "") {
+        // OK
+        await deletePlaylist(`${fileName}.txt`)
+        location.reload();
     }
 }
 
