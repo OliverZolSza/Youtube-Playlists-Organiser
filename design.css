@@ -11,6 +11,30 @@ body {
     height: 100vh;
 }
 
+
+#new-icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    border: none;
+    border-radius: 2vmin;
+    left: 2.5vw;
+    top: 1vw;
+}
+
+#new-icon img{
+    width: 5vw;
+    height: auto;
+}
+
+#new-icon:hover {
+    background-color: grey;
+}
+
 #playlists {
     width: 80vw;
     height: fit-content;

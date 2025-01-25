@@ -13,7 +13,9 @@ body {
 
 #home-icon {
     position: absolute;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: fit-content;
     height: fit-content;
     left: 2.5vw;

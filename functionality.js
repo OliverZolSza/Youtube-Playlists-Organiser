@@ -115,6 +115,28 @@ function createPlaylist(fileName) {
         });
 }
 
+function newPlaylist(){
+    let input;
+
+    do {
+        input = prompt("Playlist name: ", "");
+
+        if (input === null) {
+            // Cancel
+            break;
+        }
+
+    } while (input === "")
+        
+    if (input !== null) {
+        // OK
+        alert("You entered: " + input);
+        createPlaylist(`${input}.txt`)
+    } else {
+        return;
+    }
+}
+
 
 
 window.onload = () => {
