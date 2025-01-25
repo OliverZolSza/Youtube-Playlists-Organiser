@@ -75,14 +75,14 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     const videosDIV = document.getElementById("videos");
     videosDIVoriginalHeight = window.getComputedStyle(videosDIV).height;
     console.log(videosDIVoriginalHeight);
-    videosDIV.style.height = `calc(${videosDIVoriginalHeight} + calc( calc(var(--size-multiplier) * 9vmin) * ${embedURLs.length} - 5vmin + ${videosDIVoriginalHeight}))`;
+    videosDIV.style.height = `calc(${videosDIVoriginalHeight} + calc( calc(var(--size-multiplier) * 9vmin) * ${embedURLs.length} - 5vmin + ${videosDIVoriginalHeight}) + calc(${embedURLs.length} * 5vmin))`;
 
     for (let i = 0; i < embedURLs.length; i++) {
         const currentURL = embedURLs[i];
         const videoDIV = document.createElement("div")
         videoDIV.className = "video";
         videoDIV.style.position = "absolute";
-        videoDIV.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight})`;
+        videoDIV.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin))`;
         videosDIV.appendChild(videoDIV);
         const currentVideoDIV = document.getElementsByClassName("video")[i];
 
