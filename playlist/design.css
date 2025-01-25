@@ -13,7 +13,9 @@ body {
 
 #home-icon {
     position: absolute;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: fit-content;
     height: fit-content;
     left: 2.5vw;
@@ -23,6 +25,29 @@ body {
 #home-icon img{
     width: 5vw;
     height: auto;
+}
+
+#new-icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    border: none;
+    border-radius: 2vmin;
+    right: 2.5vw;
+    top: 1vw;
+}
+
+#new-icon img{
+    width: 5vw;
+    height: auto;
+}
+
+#new-icon:hover {
+    background-color: grey;
 }
 
 #videos {

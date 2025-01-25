@@ -71,8 +71,13 @@ function convertToWatchUrls (inputURLs) {
     return watchURLs;
 }
 
-function appendVideos (embedURLs = [], watchURLs = []) {
+function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     const videosDIV = document.getElementById("videos");
+
+    const newButton = document.getElementById("new-icon");
+    newButton.onclick = function(){
+        newItem(fileName);
+    };
 
     for (let i = 0; i < embedURLs.length; i++) {
         const currentURL = embedURLs[i];
@@ -141,7 +146,73 @@ function loadPlaylist (file){
     const embedURLs = convertToEmbedUrls(inputURLs);
     const watchURLs = convertToWatchUrls(inputURLs)
     
-    appendVideos(embedURLs, watchURLs);
+    appendVideos(embedURLs, watchURLs, fileName);
+}
+
+async function createItem(fileName, URL) {
+    await (function () {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', '/addItem.php', true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = xhr.responseText;
+                    
+                    if (response == "ERROR") {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                } else {
+                    reject('Error fetching file contents.');
+                }
+            };
+            
+            xhr.onerror = function() {
+                reject('Request failed.');
+            };
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+            let data = "fileName=" + encodeURIComponent(fileName) + "&url=" + encodeURIComponent(URL);
+            
+            xhr.send(data);
+        });
+    })()
+        .then(response => {
+            console.log(response);
+        })
+        .catch(error => {
+            console.log(error);
+            document.body.innerHTML = '';
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = error;
+            document.body.appendChild(errorMessage);
+        });
+}
+
+async function newItem(fileName){
+    let input;
+
+    do {
+        input = prompt("URL: ", "");
+
+        if (input === null) {
+            // Cancel
+            break;
+        }
+
+    } while (input === "")
+        
+    if (input !== null) {
+        // OK
+        await createItem(fileName, input)
+        location.reload();
+    } else {
+        return;
+    }
 }
 
 
