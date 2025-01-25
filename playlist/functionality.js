@@ -71,8 +71,13 @@ function convertToWatchUrls (inputURLs) {
     return watchURLs;
 }
 
-function appendVideos (embedURLs = [], watchURLs = []) {
+function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     const videosDIV = document.getElementById("videos");
+
+    const newButton = document.getElementById("new-item");
+    newButton.onclick = function(){
+        newItem(fileName);
+    };
 
     for (let i = 0; i < embedURLs.length; i++) {
         const currentURL = embedURLs[i];
@@ -141,10 +146,10 @@ function loadPlaylist (file){
     const embedURLs = convertToEmbedUrls(inputURLs);
     const watchURLs = convertToWatchUrls(inputURLs)
     
-    appendVideos(embedURLs, watchURLs);
+    appendVideos(embedURLs, watchURLs, fileName);
 }
 
-async function createItem(URL) {
+async function createItem(fileName, URL) {
     await (function () {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -171,7 +176,7 @@ async function createItem(URL) {
 
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     
-            let data = "url=" + encodeURIComponent(URL);
+            let data = "fileName=" + encodeURIComponent(fileName) + "&url=" + encodeURIComponent(URL);
             
             xhr.send(data);
         });
@@ -188,7 +193,7 @@ async function createItem(URL) {
         });
 }
 
-async function newItem(){
+async function newItem(fileName){
     let input;
 
     do {
@@ -203,7 +208,7 @@ async function newItem(){
         
     if (input !== null) {
         // OK
-        await createItem(input)
+        await createItem(fileName, input)
         location.reload();
     } else {
         return;
