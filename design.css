@@ -44,9 +44,11 @@ body {
     top: 5vh;
     transform: translatex(-50%);
     border-radius: 5vmin;
+    display: flex;
+    flex-wrap: wrap;
 }
 
-#playlists input {
+#playlists button {
     padding: 0;
     text-decoration: none;
     text-align: center;
@@ -59,7 +61,7 @@ body {
     width: 100%;
 }
 
-#playlists input:hover {
+#playlists button:hover {
     text-decoration: underline;
     cursor: pointer;
 }
