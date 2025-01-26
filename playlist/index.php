@@ -10,7 +10,7 @@
 <body>
     <a id="home-icon" href="/"><img src="/img/home.svg" alt="HOME"></a>
     <form action="/moveItem.php" method="post" id="videos">
-        <label>
+        <label id="submit-label">
             <input type="submit" value="1">
             Move
         </label>
