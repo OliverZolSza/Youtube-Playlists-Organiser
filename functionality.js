@@ -94,6 +94,8 @@ function loadPlaylist (file, playlistID, files){
     playlistRenameImage.alt = "EDIT";
     playlistRenameElement.appendChild(playlistRenameImage);
 
+
+    playlistTitleAndButtonsElementsDIV.appendChild(playlistRenameElement);
     playlistTitleAndButtonsElementsDIV.appendChild(playlistDeleteElement);
 
     playlistsDIV.appendChild(playlistTitleAndButtonsElementsDIV);
