@@ -45,6 +45,31 @@ body {
     color: white;
 }
 
+.moveto {
+    transform: translateY(-50%);
+    width: 4vmin;
+    height: 4vmin;
+    border-radius: 1vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.moveto img {
+    width: 100%;
+    height: 100%;
+
+}
+
+.moveto input[type="radio"]{
+    display: none;
+}
+
+
+.moveto:has(input[type="radio"]:checked){
+    background-color: orange;
+}
+
 .video {
     margin: 5vmin 0 5vmin 0;
     width: 100%;
@@ -114,10 +139,14 @@ body {
     cursor: grab;
 }
 
+.move input[type="radio"]{
+    display: none;
+}
+
 .move:hover {
     background-color: darkgray;
 }
 
-.move:active {
-    background-color: gray;
+.move:active, .move:has(input[type="radio"]:checked) {
+    background-color: orange;
 }

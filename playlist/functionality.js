@@ -96,14 +96,27 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
         videosDIV.appendChild(videoDIV);
 
         // radiobutton to move the video to
+        const moveToElement = document.createElement("label");
+        moveToElement.className = "moveto";
+        moveToElement.style.position = "absolute";
+        moveToElement.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin) + 2.5vmin)`;
+        videosDIV.appendChild(moveToElement);
+
         const moveToRadioButton = document.createElement("input");
         moveToRadioButton.type = "radio";
         moveToRadioButton.name = "moveto";
         moveToRadioButton.value = i;
-        moveToRadioButton.style.position = "absolute";
-        moveToRadioButton.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin))`;
-        videosDIV.appendChild(moveToRadioButton);
+        if (i == 0){
+            moveToRadioButton.checked = "1";
+        }
+        moveToElement.appendChild(moveToRadioButton);
 
+        const moveToIMG = document.createElement("img");
+        moveToIMG.src = "/img/move.svg";
+        moveToIMG.alt = "≡"
+        moveToElement.appendChild(moveToIMG);
+
+        // left and right sections
         const leftElement = document.createElement("div");
         leftElement.className = "left";
         videoDIV.appendChild(leftElement);
@@ -148,6 +161,9 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
         moveRadioButton.type = "radio";
         moveRadioButton.name = "move";
         moveRadioButton.value = i;
+        if (i == 0){
+            moveRadioButton.checked = "1";
+        }
         moveElement.appendChild(moveRadioButton);
 
         const moveIMG = document.createElement("img");
@@ -155,6 +171,28 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
         moveIMG.alt = "≡"
         moveElement.appendChild(moveIMG);
     }
+
+    // last radiobutton to move the video to
+    const i = embedURLs.length;
+    const moveToElement = document.createElement("label");
+    moveToElement.className = "moveto";
+    moveToElement.style.position = "absolute";
+    moveToElement.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin) + 2.5vmin)`;
+    videosDIV.appendChild(moveToElement);
+
+    const moveToRadioButton = document.createElement("input");
+    moveToRadioButton.type = "radio";
+    moveToRadioButton.name = "moveto";
+    moveToRadioButton.value = i;
+    if (i == 0){
+        moveToRadioButton.checked = "1";
+    }
+    moveToElement.appendChild(moveToRadioButton);
+
+    const moveToIMG = document.createElement("img");
+    moveToIMG.src = "/img/move.svg";
+    moveToIMG.alt = "≡"
+    moveToElement.appendChild(moveToIMG);
 }
 
 function loadPlaylist (file){
