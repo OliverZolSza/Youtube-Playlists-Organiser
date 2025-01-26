@@ -148,8 +148,8 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
         //  button.delete
         const deleteElement = document.createElement("button");
         deleteElement.className = "delete";
-        deleteElement.onclick = function() {
-            deleteItem(i, fileName);
+        deleteElement.onclick = function(event) {
+            deleteItem(event, i, fileName);
         };
         rightElement.appendChild(deleteElement);
         const deleteIMG = document.createElement("img");
@@ -223,7 +223,10 @@ function loadPlaylist (file){
 }
 
 
-function deleteItem (n, fileName) {
+function deleteItem (event, n, fileName) {
+
+    event.preventDefault();
+
     (function () {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -277,11 +280,6 @@ function deleteItem (n, fileName) {
             errorMessage.innerText = error;
             document.body.appendChild(errorMessage);
         });
-}
-
-
-function moveItem (video1, video2) {
-    // swap
 }
 
 window.onload = () => {
