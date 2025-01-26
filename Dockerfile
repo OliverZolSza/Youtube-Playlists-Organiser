@@ -4,6 +4,8 @@ WORKDIR /var/www/html
 
 RUN mkdir -p playlists
 
+RUN mkdir -p export
+
 COPY . .
 
 RUN chown -R www-data:www-data /var/www/html
