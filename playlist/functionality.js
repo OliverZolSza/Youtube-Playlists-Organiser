@@ -87,6 +87,12 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     console.log(videosDIVoriginalHeight);
     videosDIV.style.height = `calc(${videosDIVoriginalHeight} + calc( calc(var(--size-multiplier) * 9vmin) * ${embedURLs.length} - 5vmin + ${videosDIVoriginalHeight}) + calc(${embedURLs.length} * 5vmin))`;
 
+    const hiddenFileNameInput = document.createElement("input");
+    hiddenFileNameInput.type = "hidden";
+    hiddenFileNameInput.name = "fileName";
+    hiddenFileNameInput.value = fileName;
+    videosDIV.appendChild(hiddenFileNameInput);
+
     for (let i = 0; i < embedURLs.length; i++) {
         const currentURL = embedURLs[i];
         const videoDIV = document.createElement("div")
@@ -293,3 +299,26 @@ window.onload = () => {
             document.body.appendChild(errorMessage);
         });
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('videos');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch('/moveItem.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(response => {
+            console.log(response);
+            location.reload();
+        })
+        .catch(response => {
+            console.log(response);
+        });
+    });
+});

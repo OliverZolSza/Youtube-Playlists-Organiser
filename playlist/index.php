@@ -9,7 +9,12 @@
 </head>
 <body>
     <a id="home-icon" href="/"><img src="/img/home.svg" alt="HOME"></a>
-    <form action="/moveItem.php" method="post" id="videos"></form>
+    <form action="/moveItem.php" method="post" id="videos">
+        <label>
+            <input type="submit" value="1">
+            Move
+        </label>
+    </form>
     <script src="./functionality.js"></script>
 </body>
 </html>
