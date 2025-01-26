@@ -87,6 +87,7 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     console.log(videosDIVoriginalHeight);
     videosDIV.style.height = `calc(${videosDIVoriginalHeight} + calc( calc(var(--size-multiplier) * 9vmin) * ${embedURLs.length} - 5vmin + ${videosDIVoriginalHeight}) + calc(${embedURLs.length} * 5vmin))`;
 
+    // fileName
     const hiddenFileNameInput = document.createElement("input");
     hiddenFileNameInput.type = "hidden";
     hiddenFileNameInput.name = "fileName";
@@ -217,11 +218,10 @@ function loadPlaylist (file){
     const inputURLs = fileContent.split(/\r\n|\n/).map(line => line.trim()).filter(line => line !== '');
     console.log(inputURLs);
     const embedURLs = convertToEmbedUrls(inputURLs);
-    const watchURLs = convertToWatchUrls(inputURLs)
+    const watchURLs = convertToWatchUrls(inputURLs);
     
     appendVideos(embedURLs, watchURLs, fileName);
 }
-
 
 function deleteItem (event, n, fileName) {
 
@@ -267,9 +267,26 @@ function deleteItem (event, n, fileName) {
             if (currentDeleteButton) {
                 currentDeleteButton.remove();
             }
-            const currentMoveButton = currentVideoElement.getElementsByClassName("move")[0];
-            if (currentMoveButton) {
-                currentMoveButton.remove();
+            const deleteButtons = document.getElementsByClassName("delete");
+            for (let i = 0; i < deleteButtons.length; i++) {
+                const deleteButton = deleteButtons[i];
+                deleteButton.style.right = 0;
+            }
+            const moveButtons = document.getElementsByClassName("move");
+            // loop backwards to avoid skipping elements (as they are being dynamically removed)
+            for (let i = moveButtons.length - 1; i >= 0; i--) {
+                const moveButton = moveButtons[i];
+                moveButton.remove();
+            }
+            const moveToButtons = document.getElementsByClassName("moveto");
+            // loop backwards to avoid skipping elements (as they are being dynamically removed)
+            for (let i = moveToButtons.length - 1; i >= 0; i--) {
+                const moveToButton = moveToButtons[i];
+                moveToButton.remove();
+            }
+            const submitMoveButton = document.getElementById("submit-label");
+            if (submitMoveButton) {
+                submitMoveButton.remove();
             }
             currentVideoElement.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
         })
