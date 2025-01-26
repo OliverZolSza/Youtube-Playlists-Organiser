@@ -60,7 +60,7 @@ function loadPlaylist (file, playlistID, files){
     const playlistsDIV = document.getElementById("playlists");
 
 
-    const playlistTitleAndDeleteElementsDIV = document.createElement("div");
+    const playlistTitleAndButtonsElementsDIV = document.createElement("div");
 
     const playlistTitleElement = document.createElement("button");
     playlistTitleElement.type = "submit";
@@ -69,7 +69,7 @@ function loadPlaylist (file, playlistID, files){
     playlistTitleElement.onclick = function(){
         setValue(playlistID);
     };
-    playlistTitleAndDeleteElementsDIV.appendChild(playlistTitleElement);
+    playlistTitleAndButtonsElementsDIV.appendChild(playlistTitleElement);
 
     const playlistDeleteElement = document.createElement("div");
     playlistDeleteElement.className = "delete";
@@ -82,9 +82,21 @@ function loadPlaylist (file, playlistID, files){
     playlistDeleteImage.alt = "DEL";
     playlistDeleteElement.appendChild(playlistDeleteImage);
 
-    playlistTitleAndDeleteElementsDIV.appendChild(playlistDeleteElement);
 
-    playlistsDIV.appendChild(playlistTitleAndDeleteElementsDIV);
+    const playlistRenameElement = document.createElement("div");
+    playlistRenameElement.className = "rename";
+    playlistRenameElement.onclick = function() {
+        newNamePlaylist(files[playlistID]);
+    };
+
+    const playlistRenameImage = document.createElement("img");
+    playlistRenameImage.src = "/img/pencil.svg";
+    playlistRenameImage.alt = "EDIT";
+    playlistRenameElement.appendChild(playlistRenameImage);
+
+    playlistTitleAndButtonsElementsDIV.appendChild(playlistDeleteElement);
+
+    playlistsDIV.appendChild(playlistTitleAndButtonsElementsDIV);
 }
 
 function setValue (value) {
@@ -151,6 +163,73 @@ async function newPlaylist(){
     if (input !== null) {
         // OK
         await createPlaylist(`${input}.txt`)
+        location.reload();
+    } else {
+        return;
+    }
+}
+
+async function renamePlaylist(fileName, newName) {
+    await (function () {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', '/createPlaylist.php', true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = xhr.responseText;
+                    
+                    if (response == "ERROR") {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                } else {
+                    reject('Error fetching file contents.');
+                }
+            };
+            
+            xhr.onerror = function() {
+                reject('Request failed.');
+            };
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+            let data = "fileName=" + encodeURIComponent(fileName) + "&newName=" + encodeURIComponent(newName);
+            
+            xhr.send(data);
+        });
+    })()
+        .then(response => {
+            console.log(response);
+            location.reload();
+        })
+        .catch(error => {
+            console.log(error);
+            document.body.innerHTML = '';
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = error;
+            document.body.appendChild(errorMessage);
+        });
+}
+
+async function newNamePlaylist(fileName){
+    let input;
+
+    do {
+        input = prompt("New playlist name: ", "");
+
+        if (input === null) {
+            // Cancel
+            break;
+        }
+
+    } while (input === "")
+        
+    if (input !== null) {
+        // OK
+        await renamePlaylist(fileName, `${input}.txt`)
         location.reload();
     } else {
         return;
