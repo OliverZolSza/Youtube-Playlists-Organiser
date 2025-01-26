@@ -81,7 +81,7 @@ function convertToWatchUrls (inputURLs) {
     return watchURLs;
 }
 
-function appendVideos (embedURLs = [], watchURLs = [], fileName) {
+function appendVideos (embedURLs = [], inputURLs = [], fileName) {
     const videosDIV = document.getElementById("videos");
 
     const newButton = document.getElementById("new-icon");
@@ -99,6 +99,12 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     hiddenFileNameInput.name = "fileName";
     hiddenFileNameInput.value = fileName;
     videosDIV.appendChild(hiddenFileNameInput);
+
+    const submitElement = document.getElementById("submit-label");
+
+    if (inputURLs.length == 0) {
+        submitElement.style.display = "none";
+    }
 
     for (let i = 0; i < embedURLs.length; i++) {
         const currentURL = embedURLs[i];
@@ -191,6 +197,9 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     moveToElement.className = "moveto";
     moveToElement.style.position = "absolute";
     moveToElement.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin) + 2.5vmin)`;
+    if (inputURLs.length == 0) {
+        moveToElement.style.display = "none";
+    }
     videosDIV.appendChild(moveToElement);
 
     const moveToRadioButton = document.createElement("input");
@@ -224,9 +233,8 @@ function loadPlaylist (file){
     const inputURLs = fileContent.split(/\r\n|\n/).map(line => line.trim()).filter(line => line !== '');
     console.log(inputURLs);
     const embedURLs = convertToEmbedUrls(inputURLs);
-    const watchURLs = convertToWatchUrls(inputURLs);
     
-    appendVideos(embedURLs, watchURLs, fileName);
+    appendVideos(embedURLs, inputURLs, fileName);
 }
 
 async function createItem(fileName, URL) {
