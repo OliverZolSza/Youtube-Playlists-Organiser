@@ -25,6 +25,16 @@ function fetchFileContents() {
     });
 }
 
+function pixelsToVmin(pxValue) {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const smallerDimension = Math.min(viewportWidth, viewportHeight);
+
+    const vminValue = (pxValue / smallerDimension) * 100;
+
+    return vminValue;
+}
+
 function convertYoutubeUrl (youtubeUrl) {
     const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:shorts\/|(?:[^\/\n\s]+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=))|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = youtubeUrl.match(regex);
@@ -78,20 +88,54 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
     newButton.onclick = function(){
         newItem(fileName);
     };
+    
+    videosDIVoriginalHeight = window.getComputedStyle(videosDIV).height;
+    console.log(videosDIVoriginalHeight);
+    videosDIV.style.height = `calc(${videosDIVoriginalHeight} + calc( calc(var(--size-multiplier) * 9vmin) * ${embedURLs.length} - 5vmin + ${videosDIVoriginalHeight}) + calc(${embedURLs.length} * 5vmin))`;
+
+    // fileName
+    const hiddenFileNameInput = document.createElement("input");
+    hiddenFileNameInput.type = "hidden";
+    hiddenFileNameInput.name = "fileName";
+    hiddenFileNameInput.value = fileName;
+    videosDIV.appendChild(hiddenFileNameInput);
 
     for (let i = 0; i < embedURLs.length; i++) {
         const currentURL = embedURLs[i];
         const videoDIV = document.createElement("div")
         videoDIV.className = "video";
+        videoDIV.style.position = "absolute";
+        videoDIV.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin))`;
         videosDIV.appendChild(videoDIV);
-        const currentVideoDIV = document.getElementsByClassName("video")[i];
 
+        // radiobutton to move the video to
+        const moveToElement = document.createElement("label");
+        moveToElement.className = "moveto";
+        moveToElement.style.position = "absolute";
+        moveToElement.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin) + 2.5vmin)`;
+        videosDIV.appendChild(moveToElement);
+
+        const moveToRadioButton = document.createElement("input");
+        moveToRadioButton.type = "radio";
+        moveToRadioButton.name = "moveto";
+        moveToRadioButton.value = i;
+        if (i == 0){
+            moveToRadioButton.checked = "1";
+        }
+        moveToElement.appendChild(moveToRadioButton);
+
+        const moveToIMG = document.createElement("img");
+        moveToIMG.src = "/img/move.svg";
+        moveToIMG.alt = "≡"
+        moveToElement.appendChild(moveToIMG);
+
+        // left and right sections
         const leftElement = document.createElement("div");
         leftElement.className = "left";
-        currentVideoDIV.appendChild(leftElement);
+        videoDIV.appendChild(leftElement);
         const rightElement = document.createElement("div");
         rightElement.className = "right";
-        currentVideoDIV.appendChild(rightElement);
+        videoDIV.appendChild(rightElement);
 
         //  iframe
         const videoElement = document.createElement("iframe");
@@ -108,24 +152,60 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
         playlistIndexElement.innerHTML = (i + 1).toString();
         rightElement.appendChild(playlistIndexElement);
 
-        //  div.delete
-        const deleteDIV = document.createElement("div");
-        deleteDIV.className = "delete";
-        rightElement.appendChild(deleteDIV);
+        //  button.delete
+        const deleteElement = document.createElement("button");
+        deleteElement.className = "delete";
+        deleteElement.onclick = function(event) {
+            deleteItem(event, i, fileName);
+        };
+        rightElement.appendChild(deleteElement);
         const deleteIMG = document.createElement("img");
         deleteIMG.src = "/img/rubbish can.svg";
         deleteIMG.alt = "DEL"
-        deleteDIV.appendChild(deleteIMG);
+        deleteElement.appendChild(deleteIMG);
 
-        //  div.move
-        const moveDIV = document.createElement("div");
-        moveDIV.className = "move";
-        rightElement.appendChild(moveDIV);
+        //  button.move
+        const moveElement = document.createElement("label");
+        moveElement.className = "move";
+        rightElement.appendChild(moveElement);
+
+        // radiobutton to select video to move
+        const moveRadioButton = document.createElement("input");
+        moveRadioButton.type = "radio";
+        moveRadioButton.name = "move";
+        moveRadioButton.value = i;
+        if (i == 0){
+            moveRadioButton.checked = "1";
+        }
+        moveElement.appendChild(moveRadioButton);
+
         const moveIMG = document.createElement("img");
         moveIMG.src = "/img/move.svg";
         moveIMG.alt = "≡"
-        moveDIV.appendChild(moveIMG);
+        moveElement.appendChild(moveIMG);
     }
+
+    // last radiobutton to move the video to
+    const i = embedURLs.length;
+    const moveToElement = document.createElement("label");
+    moveToElement.className = "moveto";
+    moveToElement.style.position = "absolute";
+    moveToElement.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin) + 2.5vmin)`;
+    videosDIV.appendChild(moveToElement);
+
+    const moveToRadioButton = document.createElement("input");
+    moveToRadioButton.type = "radio";
+    moveToRadioButton.name = "moveto";
+    moveToRadioButton.value = i;
+    if (i == 0){
+        moveToRadioButton.checked = "1";
+    }
+    moveToElement.appendChild(moveToRadioButton);
+
+    const moveToIMG = document.createElement("img");
+    moveToIMG.src = "/img/move.svg";
+    moveToIMG.alt = "≡"
+    moveToElement.appendChild(moveToIMG);
 }
 
 function loadPlaylist (file){
@@ -144,7 +224,7 @@ function loadPlaylist (file){
     const inputURLs = fileContent.split(/\r\n|\n/).map(line => line.trim()).filter(line => line !== '');
     console.log(inputURLs);
     const embedURLs = convertToEmbedUrls(inputURLs);
-    const watchURLs = convertToWatchUrls(inputURLs)
+    const watchURLs = convertToWatchUrls(inputURLs);
     
     appendVideos(embedURLs, watchURLs, fileName);
 }
@@ -215,7 +295,147 @@ async function newItem(fileName){
     }
 }
 
+async function createItem(fileName, URL) {
+    await (function () {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
 
+            xhr.open('POST', '/addItem.php', true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = xhr.responseText;
+                    
+                    if (response == "ERROR") {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                } else {
+                    reject('Error fetching file contents.');
+                }
+            };
+            
+            xhr.onerror = function() {
+                reject('Request failed.');
+            };
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+            let data = "fileName=" + encodeURIComponent(fileName) + "&url=" + encodeURIComponent(URL);
+            
+            xhr.send(data);
+        });
+    })()
+        .then(response => {
+            console.log(response);
+        })
+        .catch(error => {
+            console.log(error);
+            document.body.innerHTML = '';
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = error;
+            document.body.appendChild(errorMessage);
+        });
+}
+
+async function newItem(fileName){
+    let input;
+
+    do {
+        input = prompt("URL: ", "");
+
+        if (input === null) {
+            // Cancel
+            break;
+        }
+
+    } while (input === "")
+        
+    if (input !== null) {
+        // OK
+        await createItem(fileName, input)
+        location.reload();
+    } else {
+        return;
+    }
+}
+
+function deleteItem (event, n, fileName) {
+
+    event.preventDefault();
+
+    (function () {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', '/delete.php', true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = xhr.responseText;
+                    
+                    if (response == "ERROR") {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                } else {
+                    reject('Error fetching file contents.');
+                }
+            };
+            
+            xhr.onerror = function() {
+                reject('Request failed.');
+            };
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+            let data = "index=" + encodeURIComponent(n) + "&fileName=" + encodeURIComponent(fileName);
+
+            console.log(data);
+            
+            xhr.send(data);
+        });
+    })()
+        .then(response => {
+            console.log(response);
+            const currentVideoElement = document.getElementsByClassName("video")[n];
+            const currentDeleteButton = currentVideoElement.getElementsByClassName("delete")[0];
+            if (currentDeleteButton) {
+                currentDeleteButton.remove();
+            }
+            const deleteButtons = document.getElementsByClassName("delete");
+            for (let i = 0; i < deleteButtons.length; i++) {
+                const deleteButton = deleteButtons[i];
+                deleteButton.style.right = 0;
+            }
+            const moveButtons = document.getElementsByClassName("move");
+            // loop backwards to avoid skipping elements (as they are being dynamically removed)
+            for (let i = moveButtons.length - 1; i >= 0; i--) {
+                const moveButton = moveButtons[i];
+                moveButton.remove();
+            }
+            const moveToButtons = document.getElementsByClassName("moveto");
+            // loop backwards to avoid skipping elements (as they are being dynamically removed)
+            for (let i = moveToButtons.length - 1; i >= 0; i--) {
+                const moveToButton = moveToButtons[i];
+                moveToButton.remove();
+            }
+            const submitMoveButton = document.getElementById("submit-label");
+            if (submitMoveButton) {
+                submitMoveButton.remove();
+            }
+            currentVideoElement.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        })
+        .catch(error => {
+            console.log(error);
+            document.body.innerHTML = '';
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = error;
+            document.body.appendChild(errorMessage);
+        });
+}
 
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -232,3 +452,26 @@ window.onload = () => {
             document.body.appendChild(errorMessage);
         });
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('videos');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch('/moveItem.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(response => {
+            console.log(response);
+            location.reload();
+        })
+        .catch(response => {
+            console.log(response);
+        });
+    });
+});

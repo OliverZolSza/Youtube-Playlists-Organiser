@@ -10,7 +10,12 @@
 <body>
     <a id="home-icon" href="/"><img src="/img/home.svg" alt="HOME"></a>
     <button id="new-icon"><img src="/img/new.svg" alt="NEW"></button>
-    <div id="videos"></div>
+    <form action="/moveItem.php" method="post" id="videos">
+        <label id="submit-label">
+            <input type="submit" value="1">
+            Move
+        </label>
+    </form>
     <script src="./functionality.js"></script>
 </body>
 </html>
