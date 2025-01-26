@@ -71,28 +71,28 @@ function loadPlaylist (file, playlistID, files){
     };
     playlistTitleAndButtonsElementsDIV.appendChild(playlistTitleElement);
 
-    const playlistDeleteElement = document.createElement("div");
-    playlistDeleteElement.className = "delete";
-    playlistDeleteElement.onclick = function() {
-        deletePlaylist(files[playlistID], playlistTitleElement, playlistDeleteElement);
-    };
-
-    const playlistDeleteImage = document.createElement("img");
-    playlistDeleteImage.src = "/img/rubbish can.svg";
-    playlistDeleteImage.alt = "DEL";
-    playlistDeleteElement.appendChild(playlistDeleteImage);
-
 
     const playlistRenameElement = document.createElement("div");
     playlistRenameElement.className = "rename";
     playlistRenameElement.onclick = function() {
-        newNamePlaylist(files[playlistID]);
+        newNamePlaylist(fileName);
     };
 
     const playlistRenameImage = document.createElement("img");
     playlistRenameImage.src = "/img/pencil.svg";
     playlistRenameImage.alt = "EDIT";
     playlistRenameElement.appendChild(playlistRenameImage);
+
+    const playlistDeleteElement = document.createElement("div");
+    playlistDeleteElement.className = "delete";
+    playlistDeleteElement.onclick = function() {
+        deletePlaylist(files[playlistID], playlistTitleElement, playlistDeleteElement, playlistRenameElement);
+    };
+
+    const playlistDeleteImage = document.createElement("img");
+    playlistDeleteImage.src = "/img/rubbish can.svg";
+    playlistDeleteImage.alt = "DEL";
+    playlistDeleteElement.appendChild(playlistDeleteImage);
 
 
     playlistTitleAndButtonsElementsDIV.appendChild(playlistRenameElement);
@@ -172,11 +172,12 @@ async function newPlaylist(){
 }
 
 async function renamePlaylist(fileName, newName) {
+    console.log(newName);
     await (function () {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
 
-            xhr.open('POST', '/createPlaylist.php', true);
+            xhr.open('POST', '/renamePlaylist.php', true);
             
             xhr.onload = function() {
                 if (xhr.status === 200) {
@@ -231,14 +232,13 @@ async function newNamePlaylist(fileName){
         
     if (input !== null) {
         // OK
-        await renamePlaylist(fileName, `${input}.txt`)
-        location.reload();
+        await renamePlaylist(fileName, `${input}.txt`);
     } else {
         return;
     }
 }
 
-async function deletePlaylist (fileName, titleElement, deleteButton) {
+async function deletePlaylist (fileName, titleElement, deleteButton, renameButton) {
     await (function () {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -278,6 +278,7 @@ async function deletePlaylist (fileName, titleElement, deleteButton) {
                 alert("THIS PLAYLIST HAS BEEN DELETED");
             };
             deleteButton.remove();
+            renameButton.remove();
         })
         .catch(error => {
             console.log(error);
