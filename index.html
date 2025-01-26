@@ -9,6 +9,9 @@
 </head>
 <body>
     <button id="new-icon" onclick="newPlaylist()"><img src="/img/new.svg" alt="NEW"></button>
+    <div id="import-modal">
+        <input type="file" name="import-file" id="import-file-input">
+    </div>
     <form action="/playlist" method="get" id="playlists">
         <input type="hidden" id="submitValue" name="list" value="">
     </form>
