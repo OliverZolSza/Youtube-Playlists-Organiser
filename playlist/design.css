@@ -65,6 +65,26 @@ body {
     display: none;
 }
 
+#submit-label{
+    position: absolute;
+    background-color: white;
+    font-size: 5vmin;
+    font-family: sans-serif;
+    border-radius: 0.5vmin;
+    top: 15vmin;
+    right: 25%;
+    z-index: 1000;
+    transform: translateX(50%);
+}
+
+#submit-label:hover{
+    background-color: grey;
+}
+
+#submit-label input[type="submit"]{
+    display: none;
+}
+
 
 .moveto:has(input[type="radio"]:checked){
     background-color: orange;
