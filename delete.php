@@ -17,12 +17,12 @@ if (is_dir($directoryPath)) {
             $lines = array_values($lines);
             $result = file_put_contents($filePath, implode(PHP_EOL, $lines) . PHP_EOL);
             //MAKE SURE PLAYLIST FILES HAVE CORRECT PERMISSIONS
-            $response = 'SUCCESS? ' . var_export($result, true);
+            $response = 'SUCCESS';
         } else {
-            $response = 'ERROR: ' . isset($lines[$lineToRemove]);
+            $response = 'ERROR';
         }
     } else {
-        $response = 'ERROR: ' . $filePath;
+        $response = 'ERROR';
     }
 
     echo $response;
