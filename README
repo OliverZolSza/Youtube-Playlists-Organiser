@@ -4,4 +4,4 @@ sudo docker build -t youtube-playlists-organiser .
 
 sudo docker volume create youtube-playlists-organiser_playlists
 
-sudo docker run -d -p 8080:80 -v youtube-playlists-organiser_playlists:/var/www/html/playlists youtube-playlists-organiser
+sudo docker run -d -p 8080:80 -v ~/Downloads/Youtube\ Playlists\ Organiser\ -\ Export:/var/www/html/export -v youtube-playlists-organiser_playlists:/var/www/html/playlists youtube-playlists-organiser
