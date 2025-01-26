@@ -25,6 +25,16 @@ function fetchFileContents() {
     });
 }
 
+function pixelsToVmin(pxValue) {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const smallerDimension = Math.min(viewportWidth, viewportHeight);
+
+    const vminValue = (pxValue / smallerDimension) * 100;
+
+    return vminValue;
+}
+
 function convertYoutubeUrl (youtubeUrl) {
     const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     const match = youtubeUrl.match(regex);
@@ -210,13 +220,15 @@ function deleteItem (n, fileName) {
 }
 
 
-function moveItem (n1, n2) {
-    //move item from n1 to n2
+function moveItem (video1, video2) {
+    // swap
 }
 
 function setUpDragging() {
     const videos = document.querySelectorAll('.video');
     let currentDrag = null;
+    let currentDragLeftCSS, currentDragTopCSS;
+    let currentDragLeftValue, currentDragTopValue
     let offsetX, offsetY;
     let originalX, originalY;
 
@@ -226,6 +238,10 @@ function setUpDragging() {
         moveHandle.addEventListener('mousedown', (e) => {
             e.preventDefault(); // Prevent default behavior
             currentDrag = video;
+            currentDragLeftCSS = currentDrag.style.left;
+            currentDragTopCSS = currentDrag.style.top;
+            currentDragLeftValue = pixelsToVmin( parseFloat(window.getComputedStyle(currentDrag).left) );
+            currentDragTopValue = pixelsToVmin( parseFloat(window.getComputedStyle(currentDrag).right) );
             offsetX = e.clientX - video.getBoundingClientRect().left;
             offsetY = e.clientY - video.getBoundingClientRect().top;
 
@@ -249,13 +265,20 @@ function setUpDragging() {
         }
     }
     
-    function onMouseUp() {
+    function onMouseUp(currentDrag) {
         if (currentDrag) {
             const nearestVideo = findNearestVideo(currentDrag);
             if (nearestVideo) {
-                const rect = nearestVideo.getBoundingClientRect();
-                currentDrag.style.left = `${rect.left + window.scrollX}px`;
-                currentDrag.style.top = `${rect.top + window.scrollY}px`;
+                const rect_nearest = window.getComputedStyle(nearestVideo);
+                const nearestLeftValue = pixelsToVmin( parseFloat(rect_nearest.left) );
+                const nearestTopValue = pixelsToVmin( parseFloat(rect_nearest.top) );
+
+                const currentDragLeftOffset = currentDragLeftValue - nearestLeftValue;
+                const currentDragTopOffset = currentDragTopValue - nearestTopValue;
+
+
+                currentDrag.style.left = `calc(${ currentDragLeftCSS } - ${currentDragLeftOffset}vmin)`;
+                currentDrag.style.top = `calc(${ currentDragTopCSS } - ${currentDragTopOffset}vmin)`;
             } else {
                 currentDrag.style.left = originalX;
                 currentDrag.style.top = originalY;
@@ -263,6 +286,8 @@ function setUpDragging() {
             currentDrag = null;
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
+
+            moveItem(currentDrag, nearestVideo);
         }
     }
     
