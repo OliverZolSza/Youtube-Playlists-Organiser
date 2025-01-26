@@ -1,8 +1,5 @@
-To run the program place all of the files into a web server's root and access via the URL
+Run with docker:
 
-Place playlist files in ./playlists in the format: name_of_playlist.txt, contents are URLs separated with newlines e.g.:
+sudo docker build -t youtube-playlists-organiser .
 
-URL1
-URL2
-URL3
-etc.
+sudo docker run -d -p 8080:80 youtube-playlists-organiser
