@@ -9,7 +9,7 @@
 </head>
 <body>
     <a id="home-icon" href="/"><img src="/img/home.svg" alt="HOME"></a>
-    <div id="videos"></div>
+    <form action="/moveItem.php" method="post" id="videos"></form>
     <script src="./functionality.js"></script>
 </body>
 </html>

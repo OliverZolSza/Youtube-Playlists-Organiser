@@ -94,14 +94,22 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
         videoDIV.style.position = "absolute";
         videoDIV.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin))`;
         videosDIV.appendChild(videoDIV);
-        const currentVideoDIV = document.getElementsByClassName("video")[i];
+
+        // radiobutton to move the video to
+        const moveToRadioButton = document.createElement("input");
+        moveToRadioButton.type = "radio";
+        moveToRadioButton.name = "moveto";
+        moveToRadioButton.value = i;
+        moveToRadioButton.style.position = "absolute";
+        moveToRadioButton.style.top = `calc(${i} * calc(calc(var(--size-multiplier) * 9vmin)) - 5vmin + ${videosDIVoriginalHeight} + calc(${i + 1} * 5vmin))`;
+        videosDIV.appendChild(moveToRadioButton);
 
         const leftElement = document.createElement("div");
         leftElement.className = "left";
-        currentVideoDIV.appendChild(leftElement);
+        videoDIV.appendChild(leftElement);
         const rightElement = document.createElement("div");
         rightElement.className = "right";
-        currentVideoDIV.appendChild(rightElement);
+        videoDIV.appendChild(rightElement);
 
         //  iframe
         const videoElement = document.createElement("iframe");
@@ -131,9 +139,17 @@ function appendVideos (embedURLs = [], watchURLs = [], fileName) {
         deleteElement.appendChild(deleteIMG);
 
         //  button.move
-        const moveElement = document.createElement("div");
+        const moveElement = document.createElement("label");
         moveElement.className = "move";
         rightElement.appendChild(moveElement);
+
+        // radiobutton to select video to move
+        const moveRadioButton = document.createElement("input");
+        moveRadioButton.type = "radio";
+        moveRadioButton.name = "move";
+        moveRadioButton.value = i;
+        moveElement.appendChild(moveRadioButton);
+
         const moveIMG = document.createElement("img");
         moveIMG.src = "/img/move.svg";
         moveIMG.alt = "≡"
@@ -224,97 +240,6 @@ function moveItem (video1, video2) {
     // swap
 }
 
-function setUpDragging() {
-    const videos = document.querySelectorAll('.video');
-    let currentDrag = null;
-    let currentDragLeftCSS, currentDragTopCSS;
-    let currentDragLeftValue, currentDragTopValue
-    let offsetX, offsetY;
-    let originalX, originalY;
-
-    videos.forEach(video => {
-        const moveHandle = video.querySelector('.move');
-
-        moveHandle.addEventListener('mousedown', (e) => {
-            e.preventDefault(); // Prevent default behavior
-            currentDrag = video;
-            currentDragLeftCSS = currentDrag.style.left;
-            currentDragTopCSS = currentDrag.style.top;
-            currentDragLeftValue = pixelsToVmin( parseFloat(window.getComputedStyle(currentDrag).left) );
-            currentDragTopValue = pixelsToVmin( parseFloat(window.getComputedStyle(currentDrag).right) );
-            offsetX = e.clientX - video.getBoundingClientRect().left;
-            offsetY = e.clientY - video.getBoundingClientRect().top;
-
-            originalX = video.getBoundingClientRect().left;
-            originalY = video.getBoundingClientRect().top;
-
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        });
-    });
-
-    function onMouseMove(e) {
-        if (currentDrag) {
-            const rect = currentDrag.getBoundingClientRect();
-
-            const newX = e.clientX - offsetX + window.scrollX;
-            const newY = e.clientY - offsetY + window.scrollY;
-
-            currentDrag.style.left = `${newX}px`;
-            currentDrag.style.top = `${newY}px`;
-        }
-    }
-    
-    function onMouseUp(currentDrag) {
-        if (currentDrag) {
-            const nearestVideo = findNearestVideo(currentDrag);
-            if (nearestVideo) {
-                const rect_nearest = window.getComputedStyle(nearestVideo);
-                const nearestLeftValue = pixelsToVmin( parseFloat(rect_nearest.left) );
-                const nearestTopValue = pixelsToVmin( parseFloat(rect_nearest.top) );
-
-                const currentDragLeftOffset = currentDragLeftValue - nearestLeftValue;
-                const currentDragTopOffset = currentDragTopValue - nearestTopValue;
-
-
-                currentDrag.style.left = `calc(${ currentDragLeftCSS } - ${currentDragLeftOffset}vmin)`;
-                currentDrag.style.top = `calc(${ currentDragTopCSS } - ${currentDragTopOffset}vmin)`;
-            } else {
-                currentDrag.style.left = originalX;
-                currentDrag.style.top = originalY;
-            }
-            currentDrag = null;
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-
-            moveItem(currentDrag, nearestVideo);
-        }
-    }
-    
-    function findNearestVideo(draggedVideo) {
-        let nearest = null;
-        let minDistance = Infinity;
-
-        videos.forEach(video => {
-            if (video !== draggedVideo) {
-                const rect1 = draggedVideo.getBoundingClientRect();
-                const rect2 = video.getBoundingClientRect();
-                const distance = Math.sqrt(
-                    Math.pow(rect1.left - rect2.left, 2) +
-                    Math.pow(rect1.top - rect2.top, 2)
-                );
-
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    nearest = video;
-                }
-            }
-        });
-
-        return nearest;
-    }
-}
-
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
     let playlistID = urlParams.get("list");
@@ -322,7 +247,6 @@ window.onload = () => {
     fetchFileContents()
         .then(files => {
             loadPlaylist(files[playlistID]);
-            setUpDragging();
         })
         .catch(error => {
             document.body.innerHTML = '';
