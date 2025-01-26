@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $directoryPath = 'playlists';
     $moveToIndex = $_POST['moveto'];
     $moveIndex = $_POST['move'];
-    if ($moveToIndex - $moveIndex == 1) {
+    if ($moveToIndex - $moveIndex >= 1) {
         $moveToIndex -= 1;
     }
     $fileName = $_POST['fileName'];
