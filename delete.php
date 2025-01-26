@@ -5,7 +5,7 @@ $directoryPath = 'playlists';
 $lineToRemove = urldecode($_POST['index']);
 $fileName = urldecode($_POST['fileName']);
 
-$response = [];
+$response = '';
 
 if (is_dir($directoryPath)) {
     $filePath = $directoryPath . '/' . $fileName;
