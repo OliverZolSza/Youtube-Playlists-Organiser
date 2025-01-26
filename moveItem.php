@@ -2,9 +2,6 @@
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
     $directoryPath = 'playlists';
     $moveToIndex = $_POST['moveto'];
     $moveIndex = $_POST['move'];
