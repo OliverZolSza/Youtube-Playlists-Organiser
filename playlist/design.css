@@ -12,7 +12,7 @@ body {
 }
 
 #home-icon {
-    position: absolute;
+    position: fixed;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -28,7 +28,7 @@ body {
 }
 
 #new-icon {
-    position: absolute;
+    position: fixed;
     display: flex;
     align-items: center;
     justify-content: center;

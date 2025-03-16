@@ -9,8 +9,13 @@
 </head>
 <body>
     <button id="new-icon" onclick="newPlaylist()"><img src="/img/new.svg" alt="NEW"></button>
-    <div id="import-modal">
+    <label for="show-import-export-modal-checkbox" id="show-import-export-modal">
+        <img src="/img/folder.svg" alt="IMPORT/EXPORT">
+    </label>
+    <input name="show-import-export-modal" id="show-import-export-modal-checkbox" type="checkbox" checked>
+    <div id="import-export-modal">
         <input type="file" name="import-file" id="import-file-input">
+        <label for="show-import-export-modal-checkbox" id="close-import-export-modal">Close</label>
     </div>
     <form action="/playlist" method="get" id="playlists">
         <input type="hidden" id="submitValue" name="list" value="">
