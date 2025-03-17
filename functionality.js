@@ -289,6 +289,71 @@ async function deletePlaylist (fileName, titleElement, deleteButton, renameButto
         });
 }
 
+async function importPlaylist () {
+    const fileInput = document.getElementById("import-file-input");
+
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = async function(event) {
+            const fileContents = event.target.result;
+            const filename = file.name;
+
+            await importPlaylistRequest(filename, fileContents);
+        };
+
+        reader.readAsText(file);
+    } else {
+        alert('Please select a file.');
+    }
+}
+
+async function importPlaylistRequest (fileName, fileContents) {
+    await (function () {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', '/importPlaylistFromFile.php', true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = xhr.responseText;
+                    
+                    if (response == "ERROR") {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                } else {
+                    reject('Error fetching file contents.');
+                }
+            };
+            
+            xhr.onerror = function() {
+                reject('Request failed.');
+            };
+
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            
+            let data = "fileName=" + encodeURIComponent(fileName) + "&text=" + encodeURIComponent(fileContents);
+            
+            xhr.send(data);
+        });
+    })()
+        .then(response => {
+            location.reload();
+        })
+        .catch(error => {
+            console.log(error);
+            document.body.innerHTML = '';
+            const errorMessage = document.createElement('div');
+            errorMessage.innerText = error;
+            document.body.appendChild(errorMessage);
+        });
+}
+
 
 
 window.onload = () => {

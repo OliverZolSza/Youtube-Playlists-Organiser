@@ -58,12 +58,21 @@ body {
     z-index: 1000;
 }
 
-#import-export-modal input {
+#import-export-modal input[type=file] {
     font-size: 6vmin;
     font-family: monospace;
     color: cornflowerblue;
     overflow-wrap: break-word;
     width: 100%;
+}
+
+#IMPORT {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 6vmin;
+    font-family: monospace;
+    width: fit-content;
 }
 
 #close-import-export-modal {
