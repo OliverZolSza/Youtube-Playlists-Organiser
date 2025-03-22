@@ -11,9 +11,10 @@ if (is_dir($directoryPath)) {
     $filePath = $directoryPath . '/' . $fileName;
 
     if (is_file($filePath)) {
-        $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $lines = file($filePath, FILE_IGNORE_NEW_LINES);
         if (isset($lines[$lineToRemove])) {
-            unset($lines[$lineToRemove]);
+            $lines[$lineToRemove] = "";
+            //unset($lines[$lineToRemove]);
             $lines = array_values($lines);
             $result = file_put_contents($filePath, implode(PHP_EOL, $lines) . PHP_EOL);
             //MAKE SURE PLAYLIST FILES HAVE CORRECT PERMISSIONS
