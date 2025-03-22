@@ -16,6 +16,9 @@
     <div id="import-export-modal">
         <input type="file" name="filename" id="import-file-input">
         <button onclick="importPlaylist();" id="IMPORT">Import</button>
+        <form action="/exportPlaylists.php" method="post" id="exportPlaylistsForm">
+            <input type="submit" id="exportPlaylistsButton" name="submit" value="Export Playlists">
+        </form>
         <label for="show-import-export-modal-checkbox" id="close-import-export-modal">Close</label>
     </div>
     <form action="/playlist" method="get" id="playlists">
